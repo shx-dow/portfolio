@@ -55,6 +55,7 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        dark: "#030712",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -71,15 +72,22 @@ module.exports = {
           to: { height: 0 },
         },
         fadeIn: {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "zoom-in": {
+          "0%": { transform: "scale(0.95)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        gradient: "gradient 15s ease infinite",
-        fadeIn: "fadeIn 1s ease-out",
+        fadeIn: "fadeIn 0.5s ease-out",
+        "zoom-in": "zoom-in 0.2s ease-out",
+      },
+      transitionProperty: {
+        navbar: "background-color, border-radius, left, right, top",
       },
     },
   },

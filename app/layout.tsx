@@ -3,7 +3,6 @@ import { Inter, Poppins } from "next/font/google"
 import type React from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Navbar } from "@/components/navbar"
-import { BackgroundEffect } from "@/components/background-effect"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const poppins = Poppins({
@@ -25,11 +24,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
-      <body className="bg-white dark:bg-[#121212] text-gray-900 dark:text-white transition-colors duration-300">
+      <body className="bg-white dark:bg-dark text-gray-900 dark:text-gray-100 transition-all-300">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <BackgroundEffect />
           <Navbar />
-          <div className="pt-20 animate-fadeIn relative z-10">{children}</div>
+          <div className="pt-20 animate-fade-in-up">{children}</div>
         </ThemeProvider>
       </body>
     </html>

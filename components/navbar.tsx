@@ -1,21 +1,23 @@
 "use client"
 
 import type React from "react"
-
 import Link from "next/link"
 import { ThemeSwitcher } from "./theme-switcher"
 import { useEffect, useState } from "react"
 
 export function Navbar() {
   const [activeSection, setActiveSection] = useState("")
+  const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
       const sections = document.querySelectorAll("section[id]")
-      const scrollPosition = window.scrollY + 100 // Offset for the navbar height
+      const scrollPosition = window.scrollY
+
+      setIsScrolled(scrollPosition > 50)
 
       sections.forEach((section) => {
-        const sectionTop = (section as HTMLElement).offsetTop
+        const sectionTop = (section as HTMLElement).offsetTop - 100
         const sectionHeight = section.clientHeight
         const sectionId = section.getAttribute("id") || ""
 
@@ -47,12 +49,18 @@ export function Navbar() {
   }
 
   return (
-    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full shadow-lg w-11/12 max-w-5xl">
-      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+    <nav
+      className={`fixed z-50 transition-all duration-300 ease-in-out ${
+        isScrolled
+          ? "top-4 left-1/2 transform -translate-x-1/2 bg-white/80 dark:bg-dark/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full shadow-lg w-11/12 max-w-5xl"
+          : "top-0 left-0 right-0 bg-white dark:bg-dark border-b border-gray-200 dark:border-gray-700"
+      }`}
+    >
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between h-16">
           <Link
             href="/"
-            className="font-bold text-lg text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors mr-6 bg-gradient-to-r from-teal-400 to-purple-500 text-transparent bg-clip-text"
+            className="font-bold text-lg text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors mr-6"
           >
             Chitransh
           </Link>
