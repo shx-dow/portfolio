@@ -7,14 +7,18 @@ import { useEffect, useState } from "react"
 
 export function Navbar() {
   const [activeSection, setActiveSection] = useState("")
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
 
   useEffect(() => {
     const handleScroll = () => {
       const sections = document.querySelectorAll("section[id]")
       const scrollPosition = window.scrollY
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
 
-      setIsScrolled(scrollPosition > 50)
+      // Calculate scroll progress (0 to 1)
+      const progress = Math.min(scrollPosition / (documentHeight - windowHeight), 1)
+      setScrollProgress(progress)
 
       sections.forEach((section) => {
         const sectionTop = (section as HTMLElement).offsetTop - 100
@@ -48,13 +52,20 @@ export function Navbar() {
     }
   }
 
+  const navStyle = {
+    backgroundColor: `rgba(255, 255, 255, ${scrollProgress * 0.8})`,
+    backdropFilter: `blur(${scrollProgress * 8}px)`,
+    borderRadius: `${scrollProgress * 9999}px`,
+    transform: `translateY(${scrollProgress * 16}px) translateX(-50%)`,
+    width: `${100 - scrollProgress * 10}%`,
+    boxShadow: `0 ${scrollProgress * 8}px ${scrollProgress * 24}px rgba(0, 0, 0, ${scrollProgress * 0.1})`,
+    border: `${scrollProgress}px solid rgba(229, 231, 235, ${scrollProgress * 0.5})`,
+  }
+
   return (
     <nav
-      className={`fixed z-50 transition-all duration-300 ease-in-out ${
-        isScrolled
-          ? "top-4 left-1/2 transform -translate-x-1/2 bg-white/80 dark:bg-dark/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full shadow-lg w-11/12 max-w-5xl"
-          : "top-0 left-0 right-0 bg-white dark:bg-dark border-b border-gray-200 dark:border-gray-700"
-      }`}
+      className="fixed z-50 transition-all duration-300 ease-in-out left-1/2 -translate-x-1/2 top-0"
+      style={navStyle}
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between h-16">
