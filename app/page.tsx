@@ -77,7 +77,7 @@ export default function Home() {
               <CardFooter>
                 <Button
                   variant="outline"
-                  className="transition-all-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200"
+                  className="transition-all-300 hover:bg-gray-100/80 dark:hover:bg-gray-700/80 text-gray-800 dark:text-gray-200 bg-gray-100/60 dark:bg-gray-800/60 backdrop-blur-sm"
                   onClick={() =>
                     openModal(
                       "Weather App",
@@ -142,7 +142,7 @@ export default WeatherApp;`,
               <CardFooter>
                 <Button
                   variant="outline"
-                  className="transition-all-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200"
+                  className="transition-all-300 hover:bg-gray-100/80 dark:hover:bg-gray-700/80 text-gray-800 dark:text-gray-200 bg-gray-100/60 dark:bg-gray-800/60 backdrop-blur-sm"
                   onClick={() =>
                     openModal(
                       "Todo List",

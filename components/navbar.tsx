@@ -4,20 +4,20 @@ import type React from "react"
 import Link from "next/link"
 import { ThemeSwitcher } from "./theme-switcher"
 import { useEffect, useState } from "react"
+import { useTheme } from "next-themes"
 
 export function Navbar() {
   const [activeSection, setActiveSection] = useState("")
   const [scrollProgress, setScrollProgress] = useState(0)
+  const { theme } = useTheme()
 
   useEffect(() => {
     const handleScroll = () => {
       const sections = document.querySelectorAll("section[id]")
       const scrollPosition = window.scrollY
-      const windowHeight = window.innerHeight
-      const documentHeight = document.documentElement.scrollHeight
 
-      // Calculate scroll progress (0 to 1)
-      const progress = Math.min(scrollPosition / (documentHeight - windowHeight), 1)
+      // Calculate scroll progress (0 to 1), but reach 1 much quicker
+      const progress = Math.min(scrollPosition / 100, 1)
       setScrollProgress(progress)
 
       sections.forEach((section) => {
@@ -53,18 +53,18 @@ export function Navbar() {
   }
 
   const navStyle = {
-    backgroundColor: `rgba(255, 255, 255, ${scrollProgress * 0.8})`,
+    backgroundColor: `rgb(var(--background-rgb) / ${0.6 + scrollProgress * 0.2})`,
     backdropFilter: `blur(${scrollProgress * 8}px)`,
     borderRadius: `${scrollProgress * 9999}px`,
     transform: `translateY(${scrollProgress * 16}px) translateX(-50%)`,
-    width: `${100 - scrollProgress * 10}%`,
-    boxShadow: `0 ${scrollProgress * 8}px ${scrollProgress * 24}px rgba(0, 0, 0, ${scrollProgress * 0.1})`,
-    border: `${scrollProgress}px solid rgba(229, 231, 235, ${scrollProgress * 0.5})`,
+    width: `${95 - scrollProgress * 25}%`, // Narrower in pill shape
+    boxShadow: `0 ${scrollProgress * 8}px ${scrollProgress * 24}px rgb(var(--shadow-rgb) / ${scrollProgress * 0.1})`,
+    border: `${scrollProgress}px solid rgb(var(--border-rgb) / ${scrollProgress * 0.5})`,
   }
 
   return (
     <nav
-      className="fixed z-50 transition-all duration-300 ease-in-out left-1/2 -translate-x-1/2 top-0"
+      className="fixed z-50 transition-all duration-200 ease-in-out left-1/2 -translate-x-1/2 top-0"
       style={navStyle}
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
