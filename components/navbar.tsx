@@ -5,10 +5,12 @@ import Link from "next/link"
 import { ThemeSwitcher } from "./theme-switcher"
 import { useEffect, useState } from "react"
 import { useTheme } from "next-themes"
+import { Menu, X } from "lucide-react"
 
 export function Navbar() {
   const [activeSection, setActiveSection] = useState("")
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { theme } = useTheme()
 
   useEffect(() => {
@@ -50,6 +52,7 @@ export function Navbar() {
         behavior: "smooth",
       })
     }
+    setIsMenuOpen(false)
   }
 
   const navStyle = {
@@ -62,39 +65,89 @@ export function Navbar() {
     border: `${scrollProgress}px solid rgb(var(--border-rgb) / ${scrollProgress * 0.5})`,
   }
 
+  const navLinks = ["about", "skills", "projects"]
+
   return (
-    <nav
-      className="fixed z-50 transition-all duration-200 ease-in-out left-1/2 -translate-x-1/2 top-0"
-      style={navStyle}
-    >
-      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="flex items-center justify-between h-16">
+    <>
+      <nav
+        className="fixed z-50 transition-all duration-200 ease-in-out left-1/2 -translate-x-1/2 top-0"
+        style={navStyle}
+      >
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="flex items-center justify-between h-16">
+            <Link
+              href="/"
+              className="font-bold text-lg text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors mr-6"
+            >
+              Chitransh
+            </Link>
+            <div className="flex items-center">
+              <div className="hidden md:flex items-center space-x-6">
+                {navLinks.map((section) => (
+                  <a
+                    key={section}
+                    href={`#${section}`}
+                    onClick={(e) => scrollToSection(e, section)}
+                    className={`capitalize text-sm hover:text-gray-900 dark:hover:text-white transition-colors ${
+                      activeSection === section
+                        ? "text-gray-900 dark:text-white font-semibold"
+                        : "text-gray-600 dark:text-gray-400"
+                    }`}
+                  >
+                    {section}
+                  </a>
+                ))}
+              </div>
+              <ThemeSwitcher />
+              <button
+                className="md:hidden ml-4 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                <Menu size={24} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile menu */}
+      <div
+        className={`fixed inset-0 z-50 bg-white dark:bg-gray-900 transform ${
+          isMenuOpen ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 ease-in-out md:hidden`}
+      >
+        <div className="flex justify-between items-center p-4">
           <Link
             href="/"
-            className="font-bold text-lg text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors mr-6"
+            className="font-bold text-lg text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
           >
             Chitransh
           </Link>
-          <div className="flex items-center space-x-6">
-            {["about", "skills", "projects"].map((section) => (
-              <a
-                key={section}
-                href={`#${section}`}
-                onClick={(e) => scrollToSection(e, section)}
-                className={`capitalize text-sm hover:text-gray-900 dark:hover:text-white transition-colors ${
-                  activeSection === section
-                    ? "text-gray-900 dark:text-white font-semibold"
-                    : "text-gray-600 dark:text-gray-400"
-                }`}
-              >
-                {section}
-              </a>
-            ))}
-            <ThemeSwitcher />
-          </div>
+          <button
+            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <X size={24} />
+          </button>
+        </div>
+        <div className="flex flex-col items-center mt-8 space-y-8">
+          {navLinks.map((section) => (
+            <a
+              key={section}
+              href={`#${section}`}
+              onClick={(e) => scrollToSection(e, section)}
+              className={`capitalize text-lg hover:text-gray-900 dark:hover:text-white transition-colors ${
+                activeSection === section
+                  ? "text-gray-900 dark:text-white font-semibold"
+                  : "text-gray-600 dark:text-gray-400"
+              }`}
+            >
+              {section}
+            </a>
+          ))}
         </div>
       </div>
-    </nav>
+    </>
   )
 }
 
