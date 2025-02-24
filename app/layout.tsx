@@ -12,9 +12,8 @@ const poppins = Poppins({
 })
 
 export const metadata = {
-  title: "Chitransh - Personal Website",
-  description: "Personal website of Chitransh, a B.Tech CSE student",
-    generator: 'v0.dev'
+  title: "Chitransh",
+  description: "Personal Website of Chitransh"
 }
 
 export default function RootLayout({
