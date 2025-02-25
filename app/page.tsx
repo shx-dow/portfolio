@@ -21,24 +21,24 @@ export default function Home() {
     <main className="min-h-screen p-8 pt-24 md:p-24 md:pt-32 transition-all-300">
       <section className="max-w-4xl mx-auto space-y-16">
         <div className="space-y-8">
-          <h1 className="text-5xl md:text-7xl font-bold font-poppins bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-purple-500 animate-gradient">
+          <h1 className="text-5xl md:text-7xl font-bold font-poppins bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 animate-gradient">
             Hi, I'm Chitransh
           </h1>
-          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300">
+          <p className="text-xl md:text-2xl text-foreground/80">
             A second-year B.Tech CSE student passionate about technology and innovation.
           </p>
         </div>
 
         <section id="about" className="space-y-4">
-          <h2 className="text-3xl font-semibold font-poppins">About Me</h2>
-          <p className="text-lg text-gray-700 dark:text-gray-300">
+          <h2 className="text-3xl font-semibold font-poppins text-foreground">About Me</h2>
+          <p className="text-lg text-foreground/80">
             I'm a curious and dedicated student, always eager to learn and explore new technologies. My journey in
             computer science has just begun, and I'm excited about the endless possibilities ahead.
           </p>
         </section>
 
         <section id="skills" className="space-y-4">
-          <h2 className="text-3xl font-semibold font-poppins">Skills & Interests</h2>
+          <h2 className="text-3xl font-semibold font-poppins text-foreground">Skills & Interests</h2>
           <div className="flex flex-wrap gap-2">
             {[
               "Programming",
@@ -51,7 +51,9 @@ export default function Home() {
               <Badge
                 key={skill}
                 variant="secondary"
-                className="text-sm py-1 px-2 transition-all-300 hover:scale-105 bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                className="text-sm py-1.5 px-3 font-medium transition-all-300 hover:scale-105 
+                  dark:bg-[#113366] dark:text-white dark:hover:bg-[#2B888D]
+                  bg-[#E8DAD6] text-[#113366] hover:bg-[#BCB6CB] hover:text-[#113366]"
               >
                 {skill}
               </Badge>
@@ -60,145 +62,48 @@ export default function Home() {
         </section>
 
         <section id="projects" className="space-y-4">
-          <h2 className="text-3xl font-semibold font-poppins">Projects</h2>
+          <h2 className="text-3xl font-semibold font-poppins text-foreground">Projects</h2>
           <div className="grid gap-6 md:grid-cols-2">
-            <Card className="transition-all-300 hover:shadow-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+            {/* Project cards with hover effects and gradients */}
+            <Card className="transition-all-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-card to-card/50">
               <CardHeader>
                 <CardTitle>Weather App</CardTitle>
-                <CardDescription className="text-gray-600 dark:text-gray-400">
+                <CardDescription className="text-foreground/60">
                   A simple weather application using React and OpenWeatherMap API
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-foreground/80">
                   This project demonstrates API integration, state management, and responsive design in React.
                 </p>
               </CardContent>
               <CardFooter>
                 <Button
                   variant="outline"
-                  className="transition-all-300 hover:bg-gray-100/80 dark:hover:bg-gray-700/80 text-gray-800 dark:text-gray-200 bg-gray-100/60 dark:bg-gray-800/60 backdrop-blur-sm"
-                  onClick={() =>
-                    openModal(
-                      "Weather App",
-                      `import React, { useState } from 'react';
-import axios from 'axios';
-
-function WeatherApp() {
-  const [city, setCity] = useState('');
-  const [weather, setWeather] = useState(null);
-
-  const fetchWeather = async () => {
-    try {
-      const response = await axios.get(
-        \`https://api.openweathermap.org/data/2.5/weather?q=\${city}&appid=YOUR_API_KEY&units=metric\`
-      );
-      setWeather(response.data);
-    } catch (error) {
-      console.error('Error fetching weather data:', error);
-    }
-  };
-
-  return (
-    <div>
-      <input
-        type="text"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-        placeholder="Enter city name"
-      />
-      <button onClick={fetchWeather}>Get Weather</button>
-      {weather && (
-        <div>
-          <h2>{weather.name}</h2>
-          <p>Temperature: {weather.main.temp}°C</p>
-          <p>Description: {weather.weather[0].description}</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default WeatherApp;`,
-                    )
-                  }
+                  className="transition-all-300 hover:bg-primary/20 text-primary"
+                  onClick={() => openModal("Weather App", "// Weather App code here")}
                 >
                   <Code className="mr-2 h-4 w-4" /> View Code
                 </Button>
               </CardFooter>
             </Card>
-            <Card className="transition-all-300 hover:shadow-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+            <Card className="transition-all-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-card to-card/50">
               <CardHeader>
                 <CardTitle>Todo List</CardTitle>
-                <CardDescription className="text-gray-600 dark:text-gray-400">
+                <CardDescription className="text-foreground/60">
                   A simple todo list application using React hooks
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 dark:text-gray-300">
+                <p className="text-foreground/80">
                   This project showcases state management, component composition, and basic CRUD operations in React.
                 </p>
               </CardContent>
               <CardFooter>
                 <Button
                   variant="outline"
-                  className="transition-all-300 hover:bg-gray-100/80 dark:hover:bg-gray-700/80 text-gray-800 dark:text-gray-200 bg-gray-100/60 dark:bg-gray-800/60 backdrop-blur-sm"
-                  onClick={() =>
-                    openModal(
-                      "Todo List",
-                      `import React, { useState } from 'react';
-
-function TodoList() {
-  const [todos, setTodos] = useState([]);
-  const [input, setInput] = useState('');
-
-  const addTodo = () => {
-    if (input) {
-      setTodos([...todos, { id: Date.now(), text: input, completed: false }]);
-      setInput('');
-    }
-  };
-
-  const toggleTodo = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  };
-
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
-
-  return (
-    <div>
-      <input
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Add a todo"
-      />
-      <button onClick={addTodo}>Add</button>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            <span
-              style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
-              onClick={() => toggleTodo(todo.id)}
-            >
-              {todo.text}
-            </span>
-            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-export default TodoList;`,
-                    )
-                  }
+                  className="transition-all-300 hover:bg-primary/20 text-primary"
+                  onClick={() => openModal("Todo List", "// Todo List code here")}
                 >
                   <Code className="mr-2 h-4 w-4" /> View Code
                 </Button>
@@ -208,16 +113,16 @@ export default TodoList;`,
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-3xl font-semibold font-poppins">Education</h2>
-          <Card className="transition-all-300 hover:shadow-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+          <h2 className="text-3xl font-semibold font-poppins text-foreground">Education</h2>
+          <Card className="transition-all-300 hover:shadow-lg bg-gradient-to-br from-card to-card/50">
             <CardHeader>
               <CardTitle>B.Tech in Computer Science and Engineering</CardTitle>
-              <CardDescription className="text-gray-600 dark:text-gray-400">
+              <CardDescription className="text-foreground/60">
                 Your University Name, 2022 - 2026 (Expected)
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+              <ul className="list-disc list-inside space-y-1 text-foreground/80">
                 <li>Relevant coursework: Data Structures, Algorithms, Database Management, etc.</li>
                 <li>Current GPA: [Your GPA]</li>
               </ul>
@@ -226,37 +131,37 @@ export default TodoList;`,
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-3xl font-semibold font-poppins">Achievements</h2>
+          <h2 className="text-3xl font-semibold font-poppins text-foreground">Achievements</h2>
           <ul className="space-y-2">
             <li className="flex items-center transition-all-300 hover:translate-x-2">
-              <Award className="mr-2 h-5 w-5 text-yellow-500" />
-              <span className="text-gray-700 dark:text-gray-300">Dean's List - Fall 2022, Spring 2023</span>
+              <Award className="mr-2 h-5 w-5 text-primary" />
+              <span className="text-foreground/80">Dean's List - Fall 2022, Spring 2023</span>
             </li>
             <li className="flex items-center transition-all-300 hover:translate-x-2">
-              <Award className="mr-2 h-5 w-5 text-yellow-500" />
-              <span className="text-gray-700 dark:text-gray-300">1st Place - University Hackathon 2023</span>
+              <Award className="mr-2 h-5 w-5 text-primary" />
+              <span className="text-foreground/80">1st Place - University Hackathon 2023</span>
             </li>
           </ul>
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-3xl font-semibold font-poppins">Let's Connect</h2>
+          <h2 className="text-3xl font-semibold font-poppins text-foreground">Let's Connect</h2>
           <div className="flex space-x-4">
             <Link
               href="https://github.com"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300"
+              className="text-foreground/60 hover:text-foreground transition-colors duration-300"
             >
               <Github size={24} className="transition-all-300 hover:scale-110" />
             </Link>
             <Link
               href="https://linkedin.com"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300"
+              className="text-foreground/60 hover:text-foreground transition-colors duration-300"
             >
               <Linkedin size={24} className="transition-all-300 hover:scale-110" />
             </Link>
             <Link
               href="mailto:chitransh@example.com"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300"
+              className="text-foreground/60 hover:text-foreground transition-colors duration-300"
             >
               <Mail size={24} className="transition-all-300 hover:scale-110" />
             </Link>
