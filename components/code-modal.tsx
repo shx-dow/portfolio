@@ -12,7 +12,7 @@ export function CodeModal({ isOpen, onClose, code, title }: CodeModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 transition-all duration-300">
-      <div className="bg-white dark:bg-dark w-full max-w-2xl rounded-lg shadow-lg overflow-hidden animate-zoom-in">
+      <div className="bg-white dark:bg-gray-900 w-full max-w-2xl rounded-lg shadow-lg overflow-hidden animate-zoom-in">
         <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>
           <button
@@ -22,7 +22,7 @@ export function CodeModal({ isOpen, onClose, code, title }: CodeModalProps) {
             <X size={24} />
           </button>
         </div>
-        <div className="p-4 max-h-[70vh] overflow-y-auto">
+        <div className="p-4 max-h-[70vh] overflow-y-auto bg-gray-50 dark:bg-gray-800">
           <pre className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-words">{code}</pre>
         </div>
       </div>
