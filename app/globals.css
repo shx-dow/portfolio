@@ -65,6 +65,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    min-height: 100vh;
+    position: relative;
   }
   
   /* Override for dark mode */
@@ -140,5 +142,11 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* Ensure content appears above the grid */
+main {
+  position: relative;
+  z-index: 1;
 }
 
