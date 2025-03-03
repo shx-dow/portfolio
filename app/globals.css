@@ -150,3 +150,7 @@ main {
   z-index: 1;
 }
 
+::selection {
+  background-color: rgba(0, 183, 255, 0.3); /* Semi-transparent blue */
+  color: inherit; /* Keep the original text color */
+}

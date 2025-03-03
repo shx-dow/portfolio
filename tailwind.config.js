@@ -30,6 +30,7 @@ module.exports = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+        selection: '#3498db',
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -91,6 +92,15 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"),
+    function({ addBase }) {
+      addBase({
+        '::selection': { 
+          backgroundColor: '#3498db',
+          color: '#ffffff',
+        },
+      });
+    }
+  ],
 }
 
