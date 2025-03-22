@@ -27,7 +27,7 @@ export default function Home() {
         glowColor="17, 51, 102"
         falloffPercentage={60}
       >
-        <h1 className="text-5xl md:text-7xl font-bold font-heading bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 animate-gradient" >
+        <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 animate-gradient" >
           Hi, I'm Chitransh
         </h1>
         <GlowingSection className="p-8">

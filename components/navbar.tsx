@@ -12,8 +12,11 @@ export function Navbar() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { theme } = useTheme()
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+
     const handleScroll = () => {
       const sections = document.querySelectorAll("section[id]")
       const scrollPosition = window.scrollY
@@ -55,7 +58,7 @@ export function Navbar() {
     setIsMenuOpen(false)
   }
 
-  const navStyle = {
+  const navStyle = mounted ? {
     backgroundColor: theme === 'dark' 
       ? `rgb(0 0 0 / ${0.6 + scrollProgress * 0.2})`
       : `rgb(var(--background-rgb) / ${0.6 + scrollProgress * 0.2})`,
@@ -70,6 +73,7 @@ export function Navbar() {
       ? `${scrollProgress}px solid rgba(17, 51, 102, ${scrollProgress * 0.5})`
       : `${scrollProgress}px solid rgb(var(--border-rgb) / ${scrollProgress * 0.5})`,
   }
+  :{};
 
   const navLinks = ["about", "skills", "projects"]
 
