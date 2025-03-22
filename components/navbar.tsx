@@ -3,7 +3,7 @@
 import type React from "react"
 import Link from "next/link"
 import { ThemeSwitcher } from "./theme-switcher"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useLayoutEffect } from "react"
 import { useTheme } from "next-themes"
 import { Menu, X } from "lucide-react"
 
@@ -11,9 +11,17 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState("")
   const [scrollProgress, setScrollProgress] = useState(0)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { theme } = useTheme()
+  const { theme, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // Use useLayoutEffect to avoid flicker
+  useLayoutEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
+    if (!mounted || typeof window === 'undefined') return
+
     const handleScroll = () => {
       const sections = document.querySelectorAll("section[id]")
       const scrollPosition = window.scrollY
@@ -35,13 +43,15 @@ export function Navbar() {
 
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [mounted])
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
     e.preventDefault()
+    if (typeof window === 'undefined') return
+
     const element = document.getElementById(sectionId)
     if (element) {
-      const offset = 80 // Height of navbar + some padding
+      const offset = 80
       const bodyRect = document.body.getBoundingClientRect().top
       const elementRect = element.getBoundingClientRect().top
       const elementPosition = elementRect - bodyRect
@@ -55,21 +65,22 @@ export function Navbar() {
     setIsMenuOpen(false)
   }
 
-  const navStyle = {
-    backgroundColor: theme === 'dark' 
+  const currentTheme = resolvedTheme || theme
+  const navStyle = mounted ? {
+    backgroundColor: currentTheme === 'dark' 
       ? `rgb(0 0 0 / ${0.6 + scrollProgress * 0.2})`
       : `rgb(var(--background-rgb) / ${0.6 + scrollProgress * 0.2})`,
     backdropFilter: `blur(${scrollProgress * 8}px)`,
     borderRadius: `${scrollProgress * 9999}px`,
     transform: `translateY(${scrollProgress * 16}px) translateX(-50%)`,
     width: `${95 - scrollProgress * 25}%`,
-    boxShadow: theme === 'dark'
+    boxShadow: currentTheme === 'dark'
       ? `0 ${scrollProgress * 8}px ${scrollProgress * 24}px rgba(17, 51, 102, ${scrollProgress * 0.3})`
       : `0 ${scrollProgress * 8}px ${scrollProgress * 24}px rgb(var(--shadow-rgb) / ${scrollProgress * 0.1})`,
-    border: theme === 'dark'
+    border: currentTheme === 'dark'
       ? `${scrollProgress}px solid rgba(17, 51, 102, ${scrollProgress * 0.5})`
       : `${scrollProgress}px solid rgb(var(--border-rgb) / ${scrollProgress * 0.5})`,
-  }
+  } : {}
 
   const navLinks = ["about", "skills", "projects"]
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import dynamic from 'next/dynamic'
@@ -13,11 +13,11 @@ const CursorGlow = ({
   falloffPercentage = 40  // How quickly the glow fades (percentage)
 }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === 'dark'
   const [isMounted, setIsMounted] = useState(false)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsMounted(true)
     
     const updateMousePosition = (e: MouseEvent) => {
@@ -31,12 +31,14 @@ const CursorGlow = ({
     }
   }, [])
 
-  // Don't render anything until client-side
-  if (!isMounted || !isDark) return null
+  if (!isMounted || typeof window === 'undefined' || !isDark) return null
 
   return (
     <motion.div
       className="pointer-events-none fixed inset-0 z-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       style={{
         background: `radial-gradient(${glowSize}px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(${glowColor}, ${glowOpacity}), transparent ${falloffPercentage}%)`,
       }}
@@ -58,29 +60,31 @@ export const GlowingSection = ({
   className = "",
   delaySeconds = 1
 }: GlowingSectionProps) => {
-  // Rest of GlowingSection component remains the same
   const [isInView, setIsInView] = useState(false)
   const [isGlowing, setIsGlowing] = useState(false)
-  const [glowPosition, setGlowPosition] = useState({ x: 300, y: 300 })
+  const [glowPosition, setGlowPosition] = useState({ x: 0, y: 0 })
   const sectionRef = useRef<HTMLDivElement>(null)
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === 'dark'
   const [isMounted, setIsMounted] = useState(false)
   
-  // Set mounted state on client-side only
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsMounted(true)
   }, [])
+
+  // Don't render glow effects until mounted
+  const shouldRenderGlow = isMounted && typeof window !== 'undefined'
   
   useEffect(() => {
-    if (!isMounted) return
+    if (!shouldRenderGlow) return
     
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsInView(entry.isIntersecting)
-        
-        if (!entry.isIntersecting) {
-          setIsGlowing(false)
+        if (entry.isIntersecting !== isInView) {
+          setIsInView(entry.isIntersecting)
+          if (!entry.isIntersecting) {
+            setIsGlowing(false)
+          }
         }
       },
       { threshold: 0.2 }
@@ -95,24 +99,20 @@ export const GlowingSection = ({
         observer.unobserve(sectionRef.current)
       }
     }
-  }, [isMounted])
-  
+  }, [shouldRenderGlow, isInView])
+
   useEffect(() => {
-    if (!isInView) return
+    if (!isInView || !shouldRenderGlow) return
     
-    let timeoutId: NodeJS.Timeout
-    
-    timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       setIsGlowing(true)
     }, delaySeconds * 1000)
     
-    return () => {
-      clearTimeout(timeoutId)
-    }
-  }, [isInView, delaySeconds])
+    return () => clearTimeout(timeoutId)
+  }, [isInView, delaySeconds, shouldRenderGlow])
   
   useEffect(() => {
-    if (!isGlowing || !isMounted) return
+    if (!isGlowing || !shouldRenderGlow || !sectionRef.current) return
     
     let animationFrameId: number
     let angle = 0
@@ -125,65 +125,72 @@ export const GlowingSection = ({
       const centerY = rect.height / 2
       const radius = Math.min(rect.width, rect.height) * 0.3
       
-      const x = centerX + Math.cos(angle) * radius
-      const y = centerY + Math.sin(angle) * radius
+      setGlowPosition({
+        x: centerX + Math.cos(angle) * radius,
+        y: centerY + Math.sin(angle) * radius
+      })
       
-      setGlowPosition({ x, y })
-      
-      angle += 0.01
-      if (angle > Math.PI * 2) angle = 0
-      
+      angle = (angle + 0.01) % (Math.PI * 2)
       animationFrameId = requestAnimationFrame(animateGlow)
     }
     
     animateGlow()
-    
-    return () => {
-      cancelAnimationFrame(animationFrameId)
+    return () => cancelAnimationFrame(animationFrameId)
+  }, [isGlowing, shouldRenderGlow])
+
+  // Safe initial style for SSR
+  const safeInitialStyle = {
+    border: '1px solid',
+    backdropFilter: 'blur(8px)',
+  }
+
+  // Theme-dependent styles only applied after component is mounted
+  const getComputedStyle = () => {
+    if (!isMounted) return safeInitialStyle
+
+    return {
+      ...safeInitialStyle,
+      backgroundColor: isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+      borderColor: isDark ? 'rgba(17, 51, 102, 0.1)' : 'rgba(232, 218, 214, 0.2)',
     }
-  }, [isGlowing, isMounted])
+  }
 
   return (
     <motion.div
       ref={sectionRef}
-      className={`relative rounded-2xl ${className}`}
-      initial={{ 
-        backgroundColor: isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-        borderColor: isDark ? 'rgba(17, 51, 102, 0.1)' : 'rgba(232, 218, 214, 0.2)'
-      }}
-      animate={{
-        backgroundColor: isDark 
-          ? isGlowing ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.2)'
-          : isGlowing ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-        borderColor: isDark
-          ? isGlowing ? 'rgba(17, 51, 102, 0.5)' : 'rgba(17, 51, 102, 0.1)'
-          : isGlowing ? 'rgba(232, 218, 214, 0.4)' : 'rgba(232, 218, 214, 0.2)',
-        boxShadow: isGlowing 
-          ? isDark
-            ? '0 0 20px rgba(17, 51, 102, 0.3), inset 0 0 20px rgba(17, 51, 102, 0.2)'
-            : '0 0 20px rgba(188, 182, 203, 0.2), inset 0 0 20px rgba(188, 182, 203, 0.1)'
-          : 'none'
-      }}
+      className={`relative rounded-2xl ${className || ''}`}
+      initial={safeInitialStyle}
+      animate={
+        isMounted ? {
+          backgroundColor: isDark 
+            ? isGlowing ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.2)'
+            : isGlowing ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+          borderColor: isDark
+            ? isGlowing ? 'rgba(17, 51, 102, 0.5)' : 'rgba(17, 51, 102, 0.1)'
+            : isGlowing ? 'rgba(232, 218, 214, 0.4)' : 'rgba(232, 218, 214, 0.2)',
+          boxShadow: isGlowing 
+            ? isDark
+              ? '0 0 20px rgba(17, 51, 102, 0.3), inset 0 0 20px rgba(17, 51, 102, 0.2)'
+              : '0 0 20px rgba(188, 182, 203, 0.2), inset 0 0 20px rgba(188, 182, 203, 0.1)'
+            : 'none'
+        } : safeInitialStyle
+      }
       transition={{ duration: 0.5 }}
-      style={{
-        border: '1px solid',
-        backdropFilter: 'blur(8px)',
-      }}
     >
-      {/* Glow effect following animated position */}
-      {isMounted && (
+      {shouldRenderGlow && (
         <motion.div
-          className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300"
+          className="pointer-events-none absolute -inset-px opacity-0"
+          initial={{ opacity: 0 }}
           animate={{
             opacity: isGlowing ? 0.15 : 0,
             background: isDark
               ? `radial-gradient(600px circle at ${glowPosition.x}px ${glowPosition.y}px, rgba(17, 51, 102, 0.4), transparent 40%)`
               : `radial-gradient(600px circle at ${glowPosition.x}px ${glowPosition.y}px, rgba(188, 182, 203, 0.3), transparent 40%)`
           }}
+          transition={{ duration: 0.3 }}
         />
       )}
 
-      {/* Content */}
       <div className="relative z-10">
         {children}
       </div>
