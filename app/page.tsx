@@ -27,7 +27,7 @@ export default function Home() {
         glowColor="17, 51, 102"
         falloffPercentage={60}
       >
-        <h1 className="text-5xl md:text-7xl font-bold font-poppins bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 animate-gradient">
+        <h1 className="text-5xl md:text-7xl font-bold font-heading bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 animate-gradient" >
           Hi, I'm Chitransh
         </h1>
         <GlowingSection className="p-8">
@@ -37,7 +37,7 @@ export default function Home() {
             </div>
 
             <section id="about" className="space-y-4">
-              <h2 className="text-2xl font-semibold font-poppins text-foreground">About Me</h2>
+              <h2 className="text-2xl font-semibold font-heading text-foreground">About Me</h2>
               <p className="text-lg text-foreground/80">
                 Hey! I'm a 2nd-year B.Tech (CSE) student who's super into all the techy and cody things happening around the world. Whether it's AI, web dev, or just messing around with cool new tech, I love exploring and learning.
                 When I'm not coding, you'll probably find me messing up with cricket or vibing to some music. Let's build something awesome!
@@ -50,7 +50,7 @@ export default function Home() {
         <GlowingSection className="p-8">
           <section id="skills">
             <div className="space-y-4">
-              <h2 className="text-2xl font-semibold font-poppins text-foreground">Skills & Interests</h2>
+              <h2 className="text-2xl font-semibold font-heading text-foreground">Skills & Interests</h2>
               <div className="flex flex-wrap gap-2">
                 {[
                   "Python",
@@ -78,7 +78,7 @@ export default function Home() {
         <GlowingSection className="p-8">
           <section id="projects">
             <div className="space-y-4">
-              <h2 className="text-2xl font-semibold font-poppins text-foreground">Projects</h2>
+              <h2 className="text-2xl font-semibold font-heading text-foreground">Projects</h2>
               <div className="grid gap-6 md:grid-cols-2">
                 {/* Project cards with hover effects and gradients */}
                 <Card className="transition-all-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-card to-card/50">
@@ -133,7 +133,7 @@ export default function Home() {
         {/* Education Section */}
         <GlowingSection className="p-8">
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold font-poppins text-foreground">Education</h2>
+            <h2 className="text-2xl font-semibold font-heading text-foreground">Education</h2>
             <Card className="transition-all-300 hover:shadow-lg bg-gradient-to-br from-card to-card/50">
               <CardHeader>
                 <CardTitle className="text-xl font-normal">B.Tech in Computer Science and Engineering</CardTitle>
@@ -154,7 +154,7 @@ export default function Home() {
         {/* Achievements Section */}
         <GlowingSection className="p-8">
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold font-poppins text-foreground">Achievements</h2>
+            <h2 className="text-2xl font-semibold font-heading text-foreground">Achievements</h2>
             <ul className="space-y-2">
               <li className="flex items-center transition-all-300 hover:translate-x-2">
                 <Award className="mr-2 h-5 w-5 text-primary" />
@@ -171,7 +171,7 @@ export default function Home() {
         {/* Connect Section */}
         <GlowingSection className="p-8">
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold font-poppins text-foreground">Let's Connect</h2>
+            <h2 className="text-2xl font-semibold font-heading text-foreground">Let's Connect</h2>
             <div className="flex space-x-4">
               <Link
                 href="https://github.com/shx-dow"

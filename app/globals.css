@@ -76,12 +76,12 @@
   }
 }
 
-.font-poppins {
-  font-family: var(--font-poppins), sans-serif;
+.font-heading {
+  font-family: "Space Grotesk", sans-serif;
 }
 
-.font-sans {
-  font-family: var(--font-inter), sans-serif;
+.font-body {
+  font-family: "Sora", sans-serif;
 }
 
 .animate-fade-in-up {

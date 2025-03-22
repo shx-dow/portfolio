@@ -1,16 +1,12 @@
 import "./globals.css"
-import { Inter, Poppins } from "next/font/google"
+import { Space_Grotesk, Sora } from "next/font/google"
 import type React from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Navbar } from "@/components/navbar"
 import { cn } from "@/lib/utils"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
-const poppins = Poppins({
-  weight: ["400", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-poppins",
-})
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "700"] });
+const sora = Sora({ subsets: ["latin"], weight: ["400", "600"] });
 
 export const metadata = {
   title: "Chitransh",
@@ -23,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
-      <body className="bg-white dark:bg-background text-gray-900 dark:text-gray-100 transition-all-300">
+    <html lang="en" className={sora.className} suppressHydrationWarning>
+      <body className="bg-white dark:bg-background text-gray-900 dark:text-gray-100 transition-all-300 font-sans">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Navbar />
           <div className="pt-20 animate-fade-in-up">{children}</div>

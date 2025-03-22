@@ -20,6 +20,8 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-inter)"],
         poppins: ["var(--font-poppins)"],
+        heading: ["Space Grotesk", "sans-serif"],
+        body: ["Sora", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
