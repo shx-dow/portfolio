@@ -87,7 +87,7 @@ export function Navbar() {
           <div className="flex items-center justify-between h-16">
             <Link
               href="/"
-              className="font-bold text-lg text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors mr-6"
+              className="text-lg text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors mr-6"
             >
               Chitransh
             </Link>
@@ -129,7 +129,7 @@ export function Navbar() {
         <div className="flex justify-between items-center p-4">
           <Link
             href="/"
-            className="font-bold text-lg text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+            className="text-lg text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
           >
             Chitransh
           </Link>
