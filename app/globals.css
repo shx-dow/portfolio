@@ -4,57 +4,57 @@
 
 @layer base {
   :root {
-    /* Light theme colors */
-    --background: 210 40% 98%;
-    --foreground: 215 25% 27%;
-    --card: 210 40% 96%;
-    --card-foreground: 215 25% 27%;
-    --popover: 210 40% 98%;
-    --popover-foreground: 215 25% 27%;
-    --primary: 196 100% 37%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 200 50% 80%;
-    --secondary-foreground: 215 25% 27%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 196 100% 37%;
-    --accent-foreground: 210 40% 98%;
+    /* Light theme colors - Softer background */
+    --background: 260 30% 99%;    /* Reduced saturation, increased lightness */
+    --foreground: 260 25% 27%;
+    --card: 260 25% 97%;         /* Softer card background */
+    --card-foreground: 260 25% 27%;
+    --popover: 260 30% 99%;      /* Matched with background */
+    --popover-foreground: 260 25% 27%;
+    --primary: 270 70% 40%;      /* Darker purple */
+    --primary-foreground: 260 40% 98%;
+    --secondary: 260 50% 80%;    /* Light purple */
+    --secondary-foreground: 260 25% 27%;
+    --muted: 260 40% 96%;
+    --muted-foreground: 260 20% 65%;
+    --accent: 270 60% 30%;       /* Deep purple */
+    --accent-foreground: 260 40% 98%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 196 100% 37%;
+    --destructive-foreground: 260 40% 98%;
+    --border: 260 32% 91%;
+    --input: 260 32% 91%;
+    --ring: 270 70% 40%;
     --radius: 0.5rem;
 
-    --background-rgb: 255 255 255;
-    --shadow-rgb: 0 0 0;
-    --border-rgb: 229 231 235;
+    --background-rgb: 250 248 254;  /* Softer RGB background */
+    --shadow-rgb: 75 0 130;         /* Dark purple shadow */
+    --border-rgb: 235 230 250;      /* Light purple border */
   }
 
   .dark {
-    /* Pitch black dark theme with gradient accents */
-    --background: 0 0% 0%;
+    /* Dark theme with purple accents */
+    --background: 240 10% 4%;    /* Soft black/gray background (rgb(8, 8, 11)) */
     --foreground: 0 0% 100%;
-    --card: 0 0% 3%;
+    --card: 240 10% 6%;          /* Slightly lighter than background */
     --card-foreground: 0 0% 100%;
-    --popover: 0 0% 0%;
+    --popover: 240 10% 4%;       /* Match background */
     --popover-foreground: 0 0% 100%;
-    --primary: 184 52% 36%;      /* #2B888D */
+    --primary: 260 80% 70%;      /* Light purple */
     --primary-foreground: 0 0% 100%;
-    --secondary: 260 18% 75%;    /* #BCB6CB */
+    --secondary: 260 18% 75%;    /* Muted purple */
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 3%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 220 67% 23%;       /* #113366 */
+    --muted-foreground: 260 20% 65%;
+    --accent: 270 60% 40%;       /* Medium purple */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 10%;
+    --border: 260 20% 10%;
     --input: 0 0% 3%;
-    --ring: 184 52% 36%;
+    --ring: 260 52% 46%;
 
-    --background-rgb: 0 0 0;
-    --shadow-rgb: 43 136 141;
+    --background-rgb: 8 8 11;    /* Matching RGB values for background */
+    --shadow-rgb: 235 230 250;   /* Light purple shadow */
     --border-rgb: 26 26 26;
   }
 }
@@ -67,12 +67,21 @@
     @apply bg-background text-foreground;
     min-height: 100vh;
     position: relative;
+    color-scheme: light;         /* Ensures proper system colors */
   }
   
   /* Override for dark mode */
   .dark body {
-    background: #000000;  /* Force pure black in dark mode */
-    color: #ffffff;
+    @apply bg-background text-foreground;
+    color-scheme: dark;
+  }
+
+  /* Optional: Add a subtle gradient overlay for light mode */
+  .gradient-bg-light {
+    background: linear-gradient(135deg, 
+      rgba(250, 248, 254, 0.8) 0%, 
+      rgba(235, 230, 250, 0.3) 100%
+    );
   }
 }
 
@@ -105,11 +114,11 @@
 
 /* Update gradient backgrounds */
 .gradient-bg-light {
-  background: linear-gradient(135deg, #E8DAD6 0%, #F4F0EC 100%);
+  background: linear-gradient(135deg, rgba(75, 0, 130, 0.1) 0%, rgba(235, 230, 250, 0.3) 100%);
 }
 
 .gradient-bg-dark {
-  background: #000000;  /* Pure black for dark mode */
+  background: hsl(240 10% 4%);  /* Match the background variable */
   position: relative;
 }
 
@@ -121,7 +130,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #113366 0%, #2B888D 100%);
+  background: linear-gradient(135deg, rgba(235, 230, 250, 0.1) 0%, rgba(75, 0, 130, 0.2) 100%);
   opacity: 0.1;
   pointer-events: none;
 }
@@ -151,6 +160,6 @@ main {
 }
 
 ::selection {
-  background-color: rgba(0, 183, 255, 0.3); /* Semi-transparent blue */
+  background-color: rgba(75, 0, 130, 0.3); /* Semi-transparent purple */
   color: inherit; /* Keep the original text color */
 }

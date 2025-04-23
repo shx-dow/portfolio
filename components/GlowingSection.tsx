@@ -1,53 +1,8 @@
 "use client"
 
-import { useEffect, useRef, useState, useLayoutEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
-import dynamic from 'next/dynamic'
-
-// Client-only cursor glow component with configurable properties
-const CursorGlow = ({
-  glowSize = 400,         // Size of the glow in pixels
-  glowOpacity = 0.15,     // Opacity of the glow (0-1)
-  glowColor = "17, 51, 102", // RGB values for glow color
-  falloffPercentage = 40  // How quickly the glow fades (percentage)
-}) => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme === 'dark'
-  const [isMounted, setIsMounted] = useState(false)
-
-  useLayoutEffect(() => {
-    setIsMounted(true)
-    
-    const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-
-    window.addEventListener('mousemove', updateMousePosition)
-    
-    return () => {
-      window.removeEventListener('mousemove', updateMousePosition)
-    }
-  }, [])
-
-  if (!isMounted || typeof window === 'undefined' || !isDark) return null
-
-  return (
-    <motion.div
-      className="pointer-events-none fixed inset-0 z-50"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      style={{
-        background: `radial-gradient(${glowSize}px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(${glowColor}, ${glowOpacity}), transparent ${falloffPercentage}%)`,
-      }}
-    />
-  )
-}
-
-// Dynamically import to prevent SSR
-const ClientOnlyCursorGlow = dynamic(() => Promise.resolve(CursorGlow), { ssr: false })
 
 interface GlowingSectionProps {
   children: React.ReactNode
@@ -55,67 +10,43 @@ interface GlowingSectionProps {
   delaySeconds?: number
 }
 
-export const GlowingSection = ({ 
+export const GlowingSection: React.FC<GlowingSectionProps> = ({ 
   children, 
   className = "",
   delaySeconds = 1
-}: GlowingSectionProps) => {
-  const [isInView, setIsInView] = useState(false)
+}) => {
+  // Remove isInView state since we don't need it anymore
   const [isGlowing, setIsGlowing] = useState(false)
-  const [glowPosition, setGlowPosition] = useState({ x: 0, y: 0 }) // Initialize with 0 instead of arbitrary values
+  const [isHovered, setIsHovered] = useState(false)
+  
+  const [glowPosition, setGlowPosition] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return {
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2
+      };
+    }
+    return { x: 0, y: 0 };
+  });
+  
   const sectionRef = useRef<HTMLDivElement>(null)
-  const { theme, resolvedTheme } = useTheme() // Use resolvedTheme for SSR safety
+  const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
   const [isMounted, setIsMounted] = useState(false)
   
-  // Use useLayoutEffect for measurements to avoid flicker
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
     setIsMounted(true)
   }, [])
 
-  // Don't render glow effects until mounted
   const shouldRenderGlow = isMounted && typeof window !== 'undefined'
   
-  useEffect(() => {
-    if (!isMounted || typeof window === 'undefined') return
-    
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting)
-        if (!entry.isIntersecting) {
-          setIsGlowing(false)
-        }
-      },
-      { threshold: 0.2 }
-    )
-    
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-    
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current)
-      }
-    }
-  }, [isMounted])
+  // Remove the intersection observer effect
   
+  // Remove the isInView effect
+
   useEffect(() => {
-    if (!isInView) return
-    
-    let timeoutId: NodeJS.Timeout
-    
-    timeoutId = setTimeout(() => {
-      setIsGlowing(true)
-    }, delaySeconds * 1000)
-    
-    return () => {
-      clearTimeout(timeoutId)
-    }
-  }, [isInView, delaySeconds])
-  
-  useEffect(() => {
-    if (!isGlowing || !isMounted) return
+    if (!isGlowing || !isMounted || typeof window === 'undefined') return
     
     let animationFrameId: number
     let angle = 0
@@ -124,6 +55,11 @@ export const GlowingSection = ({
       if (!sectionRef.current) return
       
       const rect = sectionRef.current.getBoundingClientRect()
+      if (rect.width === 0 || rect.height === 0) {
+        animationFrameId = requestAnimationFrame(animateGlow)
+        return
+      }
+      
       const centerX = rect.width / 2
       const centerY = rect.height / 2
       const radius = Math.min(rect.width, rect.height) * 0.3
@@ -146,43 +82,62 @@ export const GlowingSection = ({
     }
   }, [isGlowing, isMounted])
 
+  // Keep only the hover effect
+  useEffect(() => {
+    if (!isHovered || !isMounted) {
+      setIsGlowing(false)
+      return
+    }
+    
+    setIsGlowing(true)
+    
+  }, [isHovered, isMounted])
+
+  // Determine default background to avoid flicker during hydration
+  const defaultBackground = isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.05)'
+  const defaultBorder = isDark ? 'rgba(230, 230, 250, 0.1)' : 'rgba(75, 0, 130, 0.2)'  // Light purple for dark theme, dark purple for light theme
+
   return (
     <motion.div
       ref={sectionRef}
       className={`relative rounded-2xl ${className}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       initial={{ 
-        backgroundColor: isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-        borderColor: isDark ? 'rgba(17, 51, 102, 0.1)' : 'rgba(232, 218, 214, 0.2)'
+        backgroundColor: defaultBackground,
+        borderColor: defaultBorder
       }}
       animate={{
         backgroundColor: isDark 
           ? isGlowing ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.2)'
           : isGlowing ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
         borderColor: isDark
-          ? isGlowing ? 'rgba(17, 51, 102, 0.5)' : 'rgba(17, 51, 102, 0.1)'
-          : isGlowing ? 'rgba(232, 218, 214, 0.4)' : 'rgba(232, 218, 214, 0.2)',
-        boxShadow: isGlowing 
+          ? isGlowing ? 'rgba(235, 230, 250, 0.4)' : 'rgba(235, 230, 250, 0.1)'  // Slightly more purple tint
+          : isGlowing ? 'rgba(75, 0, 130, 0.3)' : 'rgba(75, 0, 130, 0.15)',      // Reduced opacity for dark purple
+        boxShadow: isGlowing && shouldRenderGlow
           ? isDark
-            ? '0 0 20px rgba(17, 51, 102, 0.3), inset 0 0 20px rgba(17, 51, 102, 0.2)'
-            : '0 0 20px rgba(188, 182, 203, 0.2), inset 0 0 20px rgba(188, 182, 203, 0.1)'
+            ? '0 0 12px rgba(235, 230, 250, 0.15), inset 0 0 12px rgba(235, 230, 250, 0.08)'  // Reduced glow intensity
+            : '0 0 12px rgba(75, 0, 130, 0.12), inset 0 0 12px rgba(75, 0, 130, 0.06)'      // Reduced glow intensity
           : 'none'
       }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.3 }} // Faster transition for hover
       style={{
         border: '1px solid',
         backdropFilter: 'blur(8px)',
       }}
     >
-      {/* Glow effect following animated position */}
-      {shouldRenderGlow && (
+      {/* Only render glow effect when component is mounted and hovered */}
+      {shouldRenderGlow && isGlowing && (
         <motion.div
-          className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300"
+          className="pointer-events-none absolute -inset-px rounded-2xl overflow-hidden"
+          initial={{ opacity: 0 }}
           animate={{
-            opacity: isGlowing ? 0.15 : 0,
+            opacity: 0.1, // Slightly reduced opacity
             background: isDark
-              ? `radial-gradient(600px circle at ${glowPosition.x}px ${glowPosition.y}px, rgba(17, 51, 102, 0.4), transparent 40%)`
-              : `radial-gradient(600px circle at ${glowPosition.x}px ${glowPosition.y}px, rgba(188, 182, 203, 0.3), transparent 40%)`
+              ? `radial-gradient(600px circle at ${glowPosition.x}px ${glowPosition.y}px, rgba(235, 230, 250, 0.25), transparent 40%)`  // Adjusted color
+              : `radial-gradient(600px circle at ${glowPosition.x}px ${glowPosition.y}px, rgba(75, 0, 130, 0.15), transparent 40%)`     // Reduced opacity
           }}
+          transition={{ duration: 0.2 }}
         />
       )}
 
@@ -191,32 +146,5 @@ export const GlowingSection = ({
         {children}
       </div>
     </motion.div>
-  )
-}
-
-// Export a provider component that wraps the app with customizable cursor glow
-export const GlowProvider = ({ 
-  children,
-  glowSize = 400,
-  glowOpacity = 0.15,
-  glowColor = "17, 51, 102",
-  falloffPercentage = 40
-}: { 
-  children: React.ReactNode,
-  glowSize?: number,
-  glowOpacity?: number,
-  glowColor?: string,
-  falloffPercentage?: number
-}) => {
-  return (
-    <>
-      <ClientOnlyCursorGlow 
-        glowSize={glowSize}
-        glowOpacity={glowOpacity}
-        glowColor={glowColor}
-        falloffPercentage={falloffPercentage}
-      />
-      {children}
-    </>
   )
 }

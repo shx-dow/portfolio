@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 import { CodeModal } from "@/components/code-modal"
-import { GlowingSection, GlowProvider } from "@/components/GlowingSection"
+import { GlowingSection} from "@/components/GlowingSection"
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -21,13 +21,7 @@ export default function Home() {
   return (
     <main className="container mx-auto px-4 py-16 space-y-16">
       {/* About Section */}
-      <GlowProvider
-        glowSize={300}
-        glowOpacity={0.05}
-        glowColor="17, 51, 102"
-        falloffPercentage={60}
-      >
-        <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-blue-500 animate-gradient" >
+        <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-violet-800 animate-gradient" >
           Hi, I'm Chitransh
         </h1>
         <GlowingSection className="p-8">
@@ -55,6 +49,7 @@ export default function Home() {
                 {[
                   "Python",
                   "C++",
+                  "Web Development",
                   "UI/UX Design",
                   "Vibe Coding",
                   "Problem Solving",
@@ -63,8 +58,8 @@ export default function Home() {
                     key={skill}
                     variant="secondary"
                     className="text-sm py-1.5 px-3 font-medium transition-all-300 hover:scale-105 
-                      dark:bg-[#113366] dark:text-white dark:hover:bg-[#2B888D]
-                      bg-[#E8DAD6] text-[#113366] hover:bg-[#BCB6CB] hover:text-[#113366]"
+                      dark:bg-[#2B2B3B] dark:text-[#E8DAD6] dark:hover:bg-[#483D8B]
+                      bg-[#EBE6FA] text-[#4B0082] hover:bg-[#D8BFD8] hover:text-[#483D8B]"
                   >
                     {skill}
                   </Badge>
@@ -79,11 +74,11 @@ export default function Home() {
           <section id="projects">
             <div className="space-y-4">
               <h2 className="text-2xl font-heading text-foreground">Projects</h2>
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid gap-6">
                 {/* Project cards with hover effects and gradients */}
                 <Card className="transition-all-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-card to-card/50">
                   <CardHeader>
-                    <CardTitle>Weather App</CardTitle>
+                    <CardTitle className="text-2xl font-medium">Weather App</CardTitle>  
                     <CardDescription className="text-foreground/60">
                       A simple weather application using React and OpenWeatherMap API
                     </CardDescription>
@@ -101,28 +96,7 @@ export default function Home() {
                     >
                       <Code className="mr-2 h-4 w-4" /> View Code
                     </Button>
-                  </CardFooter>
-                </Card>
-                <Card className="transition-all-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-card to-card/50">
-                  <CardHeader>
-                    <CardTitle>Todo List</CardTitle>
-                    <CardDescription className="text-foreground/60">
-                      A simple todo list application using React hooks
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-foreground/80">
-                      This project showcases state management, component composition, and basic CRUD operations in React.
-                    </p>
-                  </CardContent>
-                  <CardFooter>
-                    <Button
-                      variant="outline"
-                      className="transition-all-300 hover:bg-primary/20 text-primary"
-                      onClick={() => openModal("Todo List", "// Todo List code here")}
-                    >
-                      <Code className="mr-2 h-4 w-4" /> View Code
-                    </Button>
+                    
                   </CardFooter>
                 </Card>
               </div>
@@ -201,7 +175,6 @@ export default function Home() {
           code={modalContent.code}
           title={modalContent.title}
         />
-      </GlowProvider>
     </main>
   )
 }

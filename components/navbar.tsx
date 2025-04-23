@@ -18,23 +18,32 @@ export function Navbar() {
     setMounted(true);
 
     const handleScroll = () => {
-      const sections = document.querySelectorAll("section[id]")
+      // Separate scroll progress calculation for navbar animation
       const scrollPosition = window.scrollY
-
-      // Calculate scroll progress (0 to 1), but reach 1 much quicker
       const progress = Math.min(scrollPosition / 100, 1)
       setScrollProgress(progress)
 
+      // Section detection using viewport middle
+      const viewportMiddle = scrollPosition + window.innerHeight / 2
+      const sections = document.querySelectorAll("section[id]")
+      
+      let currentSection = ""
       sections.forEach((section) => {
-        const sectionTop = (section as HTMLElement).offsetTop - 100
-        const sectionHeight = section.clientHeight
-        const sectionId = section.getAttribute("id") || ""
+        const sectionTop = (section as HTMLElement).offsetTop - 100 // Add offset for navbar
+        const sectionBottom = sectionTop + section.clientHeight
 
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-          setActiveSection(sectionId)
+        if (viewportMiddle >= sectionTop && viewportMiddle <= sectionBottom) {
+          currentSection = section.getAttribute("id") || ""
         }
       })
+
+      if (currentSection) {
+        setActiveSection(currentSection)
+      }
     }
+
+    // Initial check
+    handleScroll()
 
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
@@ -60,18 +69,20 @@ export function Navbar() {
 
   const navStyle = mounted ? {
     backgroundColor: theme === 'dark' 
-      ? `rgb(0 0 0 / ${0.6 + scrollProgress * 0.2})`
-      : `rgb(var(--background-rgb) / ${0.6 + scrollProgress * 0.2})`,
+      ? `rgb(8 8 11 / ${0.6 + scrollProgress * 0.2})`    // Soft black/gray for dark theme
+      : `rgb(250 248 254 / ${0.6 + scrollProgress * 0.2})`, // Soft purple-white for light theme
     backdropFilter: `blur(${scrollProgress * 8}px)`,
     borderRadius: `${scrollProgress * 9999}px`,
     transform: `translateY(${scrollProgress * 16}px) translateX(-50%)`,
     width: `${95 - scrollProgress * 25}%`,
     boxShadow: theme === 'dark'
-      ? `0 ${scrollProgress * 8}px ${scrollProgress * 24}px rgba(17, 51, 102, ${scrollProgress * 0.3})`
-      : `0 ${scrollProgress * 8}px ${scrollProgress * 24}px rgb(var(--shadow-rgb) / ${scrollProgress * 0.1})`,
+      ? `0 0 ${scrollProgress * 15}px rgba(235, 230, 250, ${scrollProgress * 0.2}), 
+         inset 0 0 ${scrollProgress * 10}px rgba(235, 230, 250, ${scrollProgress * 0.1})`
+      : `0 0 ${scrollProgress * 15}px rgba(75, 0, 130, ${scrollProgress * 0.15}), 
+         inset 0 0 ${scrollProgress * 10}px rgba(75, 0, 130, ${scrollProgress * 0.08})`,
     border: theme === 'dark'
-      ? `${scrollProgress}px solid rgba(17, 51, 102, ${scrollProgress * 0.5})`
-      : `${scrollProgress}px solid rgb(var(--border-rgb) / ${scrollProgress * 0.5})`,
+      ? `${scrollProgress}px solid rgba(235, 230, 250, ${scrollProgress * 0.3})`
+      : `${scrollProgress}px solid rgba(75, 0, 130, ${scrollProgress * 0.2})`,
   }
   :{};
 
@@ -80,14 +91,14 @@ export function Navbar() {
   return (
     <>
       <nav
-        className="fixed z-50 transition-all duration-200 ease-in-out left-1/2 -translate-x-1/2 top-0"
+        className="fixed z-40 transition-all duration-200 ease-in-out left-1/2 -translate-x-1/2 top-0"
         style={navStyle}
       >
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex items-center justify-between h-16">
             <Link
               href="/"
-              className="text-lg text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors mr-6"
+              className="text-lg font-medium text-[#4B0082] dark:text-[#E8DAD6] hover:text-[#483D8B] dark:hover:text-[#BCB6CB] transition-colors mr-6"
             >
               Chitransh
             </Link>
@@ -98,19 +109,22 @@ export function Navbar() {
                     key={section}
                     href={`#${section}`}
                     onClick={(e) => scrollToSection(e, section)}
-                    className={`capitalize text-sm hover:text-gray-900 dark:hover:text-white transition-colors ${
+                    className={`capitalize text-sm transition-colors ${
                       activeSection === section
-                        ? "text-gray-900 dark:text-white font-semibold"
-                        : "text-gray-600 dark:text-gray-400"
+                        ? "text-[#4B0082] dark:text-[#E8DAD6] font-semibold"
+                        : "text-[#483D8B]/70 dark:text-[#BCB6CB]/70 hover:text-[#4B0082] dark:hover:text-[#E8DAD6]"
                     }`}
                   >
                     {section}
                   </a>
                 ))}
               </div>
-              <ThemeSwitcher />
+              {/* Added ml-2 for margin between nav links and theme switcher */}
+              <div className="ml-2">
+                <ThemeSwitcher />
+              </div>
               <button
-                className="md:hidden ml-4 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                className="md:hidden ml-4 text-[#483D8B]/70 dark:text-[#BCB6CB]/70 hover:text-[#4B0082] dark:hover:text-[#E8DAD6]"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
                 <Menu size={24} />
@@ -122,19 +136,19 @@ export function Navbar() {
 
       {/* Mobile menu */}
       <div
-        className={`fixed inset-0 z-50 bg-white dark:bg-black transform ${
+        className={`fixed inset-0 z-50 bg-[#EBE6FA]/95 dark:bg-[#2B2B3B]/95 backdrop-blur-sm transform ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300 ease-in-out md:hidden`}
       >
         <div className="flex justify-between items-center p-4">
           <Link
             href="/"
-            className="text-lg text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+            className="text-lg text-[#4B0082] dark:text-[#E8DAD6] hover:text-[#483D8B] dark:hover:text-[#BCB6CB] transition-colors"
           >
             Chitransh
           </Link>
           <button
-            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            className="text-[#483D8B]/70 dark:text-[#BCB6CB]/70 hover:text-[#4B0082] dark:hover:text-[#E8DAD6]"
             onClick={() => setIsMenuOpen(false)}
           >
             <X size={24} />
@@ -146,10 +160,10 @@ export function Navbar() {
               key={section}
               href={`#${section}`}
               onClick={(e) => scrollToSection(e, section)}
-              className={`capitalize text-lg hover:text-gray-900 dark:hover:text-white transition-colors ${
+              className={`capitalize text-lg transition-colors ${
                 activeSection === section
-                  ? "text-gray-900 dark:text-white font-semibold"
-                  : "text-gray-600 dark:text-gray-400"
+                  ? "text-[#4B0082] dark:text-[#E8DAD6] font-semibold"
+                  : "text-[#483D8B]/70 dark:text-[#BCB6CB]/70 hover:text-[#4B0082] dark:hover:text-[#E8DAD6]"
               }`}
             >
               {section}
