@@ -51,7 +51,6 @@ export default function Home() {
                   "C++",
                   "Web Development",
                   "UI/UX Design",
-                  "Vibe Coding",
                   "Problem Solving",
                 ].map((skill) => (
                   <Badge
@@ -91,8 +90,8 @@ export default function Home() {
                   <CardFooter>
                     <Button
                       variant="outline"
-                      className="transition-all-300 hover:bg-primary/20 text-primary"
-                      onClick={() => openModal("Weather App", "// Weather App code here")}
+                      className="transition-all-300 hover:bg-primary/20 text-primary focus:outline-none focus:ring-10 active:outline-none border-none"
+                      onClick={() => openModal("Weather App", "// Will update this soon")}
                     >
                       <Code className="mr-2 h-4 w-4" /> View Code
                     </Button>
@@ -108,7 +107,7 @@ export default function Home() {
         <GlowingSection className="p-8">
           <section className="space-y-4">
             <h2 className="text-2xl font-heading text-foreground">Education</h2>
-            <Card className="transition-all-300 hover:shadow-lg bg-gradient-to-br from-card to-card/50">
+            <Card className="transition-all-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-card to-card/50">
               <CardHeader>
                 <CardTitle className="text-xl font-normal">B.Tech in Computer Science and Engineering</CardTitle>
                 <CardDescription className="text-foreground/60">
@@ -118,7 +117,7 @@ export default function Home() {
               <CardContent>
                 <ul className="list-disc list-inside space-y-1 text-foreground/80">
                   <li>Relevant coursework: Data Structures, Algorithms, Database Management, etc.</li>
-                  <li>Current GPA(3rd Sem): 9.75</li>
+                  <li>GPA: 9.75</li>
                 </ul>
               </CardContent>
             </Card>
@@ -160,7 +159,7 @@ export default function Home() {
                 <Linkedin size={24} className="transition-all-300 hover:scale-110" />
               </Link>
               <Link
-                href="mailto:chits.official7@gmail.com"
+                href="mailto:chitransh.sharma1477@gmail.com"
                 className="text-foreground/60 hover:text-foreground transition-colors duration-300"
               >
                 <Mail size={24} className="transition-all-300 hover:scale-110" />
