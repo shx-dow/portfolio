@@ -7,7 +7,6 @@ import { Navbar } from "@/components/navbar"
 import { Analytics } from "@vercel/analytics/react"
 import { cn } from "@/lib/utils"
 
-const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], display: "swap" })
 const inconsolata = Inconsolata({ subsets: ["latin"], weight: ["400", "500"], display: "swap" })
 
 export const metadata: Metadata = {
@@ -30,7 +29,7 @@ export const metadata: Metadata = {
         alt: "Chitransh Portfolio Preview",
       },
     ],
-    locale: "en_US",
+    locale: "en_IN",
     type: "website",
   },
   icons: {

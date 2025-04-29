@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 import { CodeModal } from "@/components/code-modal"
 import { GlowingSection} from "@/components/GlowingSection"
+import SpotifyNowPlaying from "@/components/spotify-now-playing"
+import SpotifyNowPlayingMinimal from "@/components/spotify-now-playing-minimal"
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -20,16 +22,12 @@ export default function Home() {
 
   return (
     <main className="container mx-auto px-4 py-16 space-y-16">
+      <SpotifyNowPlayingMinimal />
       {/* About Section */}
-        <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-violet-800 animate-gradient" >
+        <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-violet-800 animate-gradient">
           Hi, I'm Chitransh
         </h1>
         <GlowingSection className="p-8">
-          <section id="about">
-            <div className="space-y-8">
-
-            </div>
-
             <section id="about" className="space-y-4">
               <h2 className="text-2xl font-heading text-foreground">About Me</h2>
               <p className="text-lg text-foreground/80">
@@ -37,7 +35,6 @@ export default function Home() {
                 When I'm not coding, you'll probably find me messing up with cricket or vibing to some music. Let's build something awesome!
               </p>
             </section>
-          </section>
         </GlowingSection>
 
         {/* Skills Section */}
